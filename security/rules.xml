@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Patient record rules  -->
+    <record id="rule_patient_own_patient" model="ir.rule">
+        <field name="name">Patient: Own Patient Record</field>
+        <field name="model_id" ref="model_hospital_patient" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_patient_own_appointment" model="ir.rule">
+        <field name="name">Patient: Own Appointments</field>
+        <field name="model_id" ref="model_hospital_appointment" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('patient_id.partner_id', '=', user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_patient_own_vital_signs" model="ir.rule">
+        <field name="name">Patient: Own Vital Signs</field>
+        <field name="model_id" ref="model_hospital_vital_signs" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('patient_id.partner_id', '=', user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_patient_own_diagnosis" model="ir.rule">
+        <field name="name">Patient: Own Diagnoses</field>
+        <field name="model_id" ref="model_hospital_diagnosis" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('patient_id.partner_id', '=', user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_patient_own_prescription" model="ir.rule">
+        <field name="name">Patient: Own Prescriptions</field>
+        <field name="model_id" ref="model_hospital_prescription" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('patient_id.partner_id', '=', user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_patient_own_prescription_line" model="ir.rule">
+        <field name="name">Patient: Own Prescription Lines</field>
+        <field name="model_id" ref="model_hospital_prescription_line" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('prescription_id.patient_id.partner_id', '=',
+            user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_patient_own_lab_order" model="ir.rule">
+        <field name="name">Patient: Own Lab Orders</field>
+        <field name="model_id" ref="model_hospital_lab_order" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('patient_id.partner_id', '=', user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_patient_own_lab_order_line" model="ir.rule">
+        <field name="name">Patient: Own Lab Order Lines</field>
+        <field name="model_id" ref="model_hospital_lab_order_line" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('lab_order_id.patient_id.partner_id', '=', user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_patient_own_lab_test_result" model="ir.rule">
+        <field name="name">Patient: Own Lab Test Results</field>
+        <field name="model_id" ref="model_hospital_lab_test_result" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('lab_order_line_id.lab_order_id.patient_id.partner_id', '=',
+            user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_patient_own_radiology_order" model="ir.rule">
+        <field name="name">Patient: Own Radiology Orders</field>
+        <field name="model_id" ref="model_hospital_radiology_order" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('patient_id.partner_id', '=', user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_patient_own_radiology_result" model="ir.rule">
+        <field name="name">Patient: Own Radiology Results</field>
+        <field name="model_id" ref="model_hospital_radiology_result" />
+        <field name="groups" eval="[(4, ref('group_hospital_patient'))]" />
+        <field name="domain_force">[('radiology_order_id.patient_id.partner_id', '=',
+            user.partner_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+
+    <!-- Doctor record rules -->
+
+
+    <record id="rule_doctor_own_appointment" model="ir.rule">
+        <field name="name">Doctor: Own Appointments</field>
+        <field name="model_id" ref="model_hospital_appointment" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[('doctor_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_doctor_own_vital_signs" model="ir.rule">
+        <field name="name">Doctor: Own Patients' Vital Signs</field>
+        <field name="model_id" ref="model_hospital_vital_signs" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[('appointment_id.doctor_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_doctor_own_diagnosis" model="ir.rule">
+        <field name="name">Doctor: Own Diagnoses</field>
+        <field name="model_id" ref="model_hospital_diagnosis" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[('doctor_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
+    <record id="rule_doctor_own_prescription" model="ir.rule">
+        <field name="name">Doctor: Own Prescriptions</field>
+        <field name="model_id" ref="model_hospital_prescription" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[('doctor_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
+    <record id="rule_doctor_own_prescription_line" model="ir.rule">
+        <field name="name">Doctor: Own Prescription Lines</field>
+        <field name="model_id" ref="model_hospital_prescription_line" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[('prescription_id.doctor_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
+    <record id="rule_doctor_own_lab_order" model="ir.rule">
+        <field name="name">Doctor: Own Lab Orders</field>
+        <field name="model_id" ref="model_hospital_lab_order" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[('doctor_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
+    <record id="rule_doctor_own_lab_order_line" model="ir.rule">
+        <field name="name">Doctor: Own Lab Order Lines</field>
+        <field name="model_id" ref="model_hospital_lab_order_line" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[('lab_order_id.doctor_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
+    <record id="rule_doctor_own_lab_test_result" model="ir.rule">
+        <field name="name">Doctor: Own Lab Test Results</field>
+        <field name="model_id" ref="model_hospital_lab_test_result" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[('lab_order_line_id.lab_order_id.doctor_id.user_id', '=',
+            user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_doctor_own_radiology_order" model="ir.rule">
+        <field name="name">Doctor: Own Radiology Orders</field>
+        <field name="model_id" ref="model_hospital_radiology_order" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[('doctor_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
+    <record id="rule_doctor_own_radiology_result" model="ir.rule">
+        <field name="name">Doctor: Own Radiology Results</field>
+        <field name="model_id" ref="model_hospital_radiology_result" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[('radiology_order_id.doctor_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+</odoo>

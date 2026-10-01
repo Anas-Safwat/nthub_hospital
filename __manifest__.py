@@ -8,7 +8,9 @@
         'base','account','hr','stock','mail','contacts'
     ],
     'data': [
-        ''
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'security/rules.xml',
     ],
     'demo': [
         ''
