@@ -7,6 +7,6 @@ class HospitalSpecialization(models.Model):
     name = fields.Char(string='Name')
     code = fields.Char(string='Code')
     description = fields.Char(string='Description')
-    doctor_ids = fields.One2many(comodel_name='hospital.doctor', inverse_name='specialization_id', string='Doctors')
-    nurse_ids = fields.One2many(comodel_name='hospital.nurse', inverse_name='specialization_id', string='Nurses')
+    doctor_ids = fields.One2many(comodel_name='hr.employee', inverse_name='specialization_id', string='Doctors', domain="[('employement_type', '=', 'doctor')]")
+    nurse_ids = fields.One2many(comodel_name='hr.employee', inverse_name='specialization_id', string='Nurses', domain="[('employement_type', '=', 'nurse')]")
     

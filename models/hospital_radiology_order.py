@@ -5,7 +5,7 @@ class HospitalRadiologyOrder(models.Model):
     _description = "Radiology Order"
 
     appointment_id = fields.Many2one(comodel_name="hospital.appointment", string="Appointment", required=True, ondelete="cascade")
-    doctor_id = fields.Many2one(comodel_name="hospital.doctor", string="Doctor", help="Who ordered")
+    doctor_id = fields.Many2one(comodel_name="hr.employee", domain=[('employement_type', '=', 'doctor')], string="Doctor", help="Who ordered")
     patient_id = fields.Many2one(comodel_name="hospital.patient", string="Patient", help="Related patient")
     radiology_service_id = fields.Many2one(comodel_name="hospital.radiology.service", string="Radiology Service", help="Which imaging service")
     result_id = fields.Many2one(comodel_name="hospital.radiology.result", string="Result", help="Result record, created when completed")

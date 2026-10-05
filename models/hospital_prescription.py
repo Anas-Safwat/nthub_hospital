@@ -6,7 +6,7 @@ class HospitalPrescription(models.Model):
     _description = "Hospital Prescription"
 
     appointment_id = fields.Many2one(comodel_name="hospital.appointment", string="Appointment", required=True, ondelete="restrict",)
-    doctor_id = fields.Many2one(comodel_name="hospital.doctor", string="Doctor", related="appointment_id.doctor_id", store=True, readonly=True,)
+    doctor_id = fields.Many2one(comodel_name="hr.employee", domain=[('employement_type', '=', 'doctor')], string="Doctor", related="appointment_id.doctor_id", store=True, readonly=True,)
     patient_id = fields.Many2one(comodel_name="hospital.patient", string="Patient", related="appointment_id.patient_id", store=True, readonly=True,)
     prescription_line_ids = fields.One2many(comodel_name="hospital.prescription.line", inverse_name="prescription_id", string="Prescription Lines", help="Medicine lines")
     state = fields.Selection([

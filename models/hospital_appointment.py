@@ -4,10 +4,10 @@ from odoo import models, fields, api, _
 class HospitalAppointment(models.Model):
     _name = 'hospital.appointment'
     
-    patient_id = fields.Many2one(comodel_name='hospital.patient', string='Patient', ondelete='set null', required=True)
-    doctor_id = fields.Many2one(comodel_name='hospital.doctor', string='Doctor', ondelete='set null', required=True)
-    clinic_id = fields.Many2one(comodel_name='hospital.clinic', string='Clinic', ondelete='set null', required=True)
-    receptionist_id = fields.Many2one(comodel_name='hospital.receptionist', string='Receptionist', ondelete='set null', help='Who registered it?')
+    patient_id = fields.Many2one(comodel_name='hospital.patient', string='Patient', ondelete='restrict', required=True)
+    doctor_id = fields.Many2one(comodel_name='hr.employee', domain=[('employement_type', '=', 'doctor')], string='Doctor', ondelete='restrict', required=True)
+    clinic_id = fields.Many2one(comodel_name='hospital.clinic', string='Clinic', ondelete='restrict', required=True)
+    receptionist_id = fields.Many2one(comodel_name='hr.employee', domain=[('employement_type', '=', 'receptionist')], string='Receptionist', ondelete='restrict', help='Who registered it?')
     
     is_walkin = fields.Boolean(string='Is Walkin', help='Walk-in patient flag')
     appointment_date = fields.Date(string='Appointment Date', help='Selected by patient')

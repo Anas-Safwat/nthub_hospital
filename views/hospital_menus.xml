@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="hospital_menu"
+        name="Hospital"
+    />
+    <menuitem
+        id="hospital_patient_menu"
+        name="Patients"
+        action="hospital_patient_action"
+        parent="hospital_menu"
+        sequence="10" />
+
+    <menuitem
+        id="hospital_doctor_menu"
+        name="Doctors"
+        action="hospital_doctor_action"
+        parent="hospital_menu"
+        sequence="20" />
+
+    <menuitem
+        id="hospital_nurse_menu"
+        name="Nurses"
+        action="hospital_nurse_action"
+        parent="hospital_menu"
+        sequence="30" />
+    <menuitem
+        id="hospital_receptionist_menu"
+        name="Receptionist"
+        action="hospital_receptionist_action"
+        parent="hospital_menu"
+        sequence="40" />
+</odoo>

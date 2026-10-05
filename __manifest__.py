@@ -11,13 +11,16 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'security/rules.xml',
+        'views/hospital_patient_views.xml',
+        'views/hospital_nurse_views.xml',
+        'views/hospital_doctor_views.xml',
+        'views/hospital_reciptionist_views.xml',
+        'views/hospital_menus.xml',
     ],
     'demo': [
-        ''
     ],
     'auto_install': False,
-    'application': False,
+    'application': True,
     'assets': {
-        
     }
 }

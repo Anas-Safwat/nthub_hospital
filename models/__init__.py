@@ -20,3 +20,4 @@ from . import hospital_lab_order_line
 from . import hospital_lab_test_result
 from . import hospital_radiology_order
 from . import hospital_radiology_result
+from . import hospital_medicine
