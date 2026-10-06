@@ -5,7 +5,6 @@ access_hospital_patient,hospital.patient.manager,model_hospital_patient,,1,1,1,1
 access_hospital_disease,hospital.disease.manager,model_hospital_disease,,1,1,1,1
 access_hospital_lab_test,hospital.lab.test.manager,model_hospital_lab_test,,1,1,1,1
 access_hospital_radiology_service,hospital.radiology.service.manager,model_hospital_radiology_service,,1,1,1,1
-access_hospital_appointment,hospital.appointment.manager,model_hospital_appointment,,1,1,1,1
 access_hospital_vital_signs,hospital.vital.signs.manager,model_hospital_vital_signs,,1,1,1,1
 access_hospital_diagnosis,hospital.diagnosis.manager,model_hospital_diagnosis,,1,1,1,1
 access_hospital_prescription,hospital.prescription.manager,model_hospital_prescription,,1,1,1,1
@@ -15,3 +14,4 @@ access_hospital_lab_order_line,hospital.lab.order.line.manager,model_hospital_la
 access_hospital_lab_test_result,hospital.lab.test.result.manager,model_hospital_lab_test_result,,1,1,1,1
 access_hospital_radiology_order,hospital.radiology.order.manager,model_hospital_radiology_order,,1,1,1,1
 access_hospital_radiology_result,hospital.radiology.result.manager,model_hospital_radiology_result,,1,1,1,1
+access_hospital_visit,hospital.visit.manager,model_hospital_visit,,1,1,1,1

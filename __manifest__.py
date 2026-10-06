@@ -5,7 +5,7 @@
     'author': 'Anas Ibrahim',
     'license': 'LGPL-3',
     'depends': [
-        'base','account','hr','stock','mail','contacts'
+        'base','account','hr','stock','mail','contacts','calendar'
     ],
     'data': [
         'security/security.xml',
@@ -15,6 +15,8 @@
         'views/hospital_nurse_views.xml',
         'views/hospital_doctor_views.xml',
         'views/hospital_reciptionist_views.xml',
+        'views/hospital_department_views.xml',
+        'views/hospital_appointment_views.xml',
         'views/hospital_menus.xml',
     ],
     'demo': [

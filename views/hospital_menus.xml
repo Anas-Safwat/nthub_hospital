@@ -26,8 +26,20 @@
         sequence="30" />
     <menuitem
         id="hospital_receptionist_menu"
-        name="Receptionist"
+        name="Receptionists"
         action="hospital_receptionist_action"
         parent="hospital_menu"
         sequence="40" />
+    <menuitem
+        id="hospital_department_menu"
+        name="Departments"
+        action="hospital_department_action"
+        parent="hospital_menu"
+        sequence="50" />
+    <menuitem
+        id="hospital_appointments_menu"
+        name="Appointments"
+        action="hospital_appointment_action"
+        parent="hospital_menu"
+        sequence="60" />
 </odoo>

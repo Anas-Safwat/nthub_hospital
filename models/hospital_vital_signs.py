@@ -4,7 +4,7 @@ from odoo import models, fields, api, _
 class HospitalVitalSigns(models.Model):
     _name = 'hospital.vital.signs'
     
-    appointment_id = fields.Many2one(comodel_name='hospital.appointment', string='Appointment', required=True)
+    appointment_id = fields.Many2one(comodel_name='calendar.event', string='Appointment', required=True)
     patient_id = fields.Many2one(comodel_name='hospital.patient', string='Patient', help='Related field')
     nurse_id = fields.Many2one(comodel_name='hr.employee', domain=[('employement_type', '=', 'nurse')], string='Nurse', help='Who recorded')
     blood_pressure_systolic = fields.Integer(string='Blood Pressure Systolic', help='mmHg')

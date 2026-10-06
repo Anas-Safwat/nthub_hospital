@@ -3,6 +3,7 @@
     <record id="hospital_doctor_view_list" model="ir.ui.view">
         <field name="name">hospital.doctor.view.list</field>
         <field name="model">hr.employee</field>
+        <field name="priority">99</field>
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
@@ -14,6 +15,7 @@
     <record id="hospital_doctor_view_form" model="ir.ui.view">
         <field name="name">hospital.doctor.view.form</field>
         <field name="model">hr.employee</field>
+        <field name="priority">99</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
@@ -43,26 +45,35 @@
                                         placeholder="Work Mobile" string="Work Mobile"
                                         class="w-100 w-sm-75" />
                                 </h5>
-                                <h5>
-                                    <i class="fa fa-building-o fa-fw me-1 text-primary" title="Tags" />
-                                    <field name="clinic_ids" widget="many2many_tags"
-                                        options="{'color_field': 'color', 'no_create_edit': True}"
-                                        placeholder="e.g. Clinic A, Clinic B, ..."
-                                        groups="hr.group_hr_user" />
-                                </h5>
                             </div>
                         </div>
                     </div>
                     <group>
-                        <group string="Info">
+                        <group string="Medical Information">
                             <field name="license_no" />
-                            <field name="consultation_fee" />
                             <field name="specialization_id" />
+                            <field name="department_id" />
                         </group>
-                        <group string="Clinics">
-                            <field name="clinic_ids" widget="many2many_tags" />
+                        <group string="Clinic &amp; Financial ">
+                            <field name="clinic_ids" widget="many2many_tags"
+                                options="{'color_field' : 'color'}" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="consultation_fee" widget="monetary"
+                                options="{'currency_field' : 'currency_id'}" />
                         </group>
                     </group>
+                    <notebook>
+                        <page name="schedule" string="Schedule">
+                            <field name="attendance_ids">
+                                <list editable="bottom">
+                                    <field name="clinic_id" />
+                                    <field name="dayofweek" />
+                                    <field name="hour_from" />
+                                    <field name="hour_to" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

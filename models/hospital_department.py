@@ -1,7 +1,7 @@
 from odoo import models, fields, api, _
 
 
-class HrDepartment(models.Model):
+class HospitalDepartment(models.Model):
     _inherit = 'hr.department'
     
     code = fields.Char(string='Code')

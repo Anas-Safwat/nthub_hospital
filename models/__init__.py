@@ -1,4 +1,4 @@
-from . import hr_department
+from . import hospital_department
 from . import hospital_staff
 from . import hospital_specialization
 from . import hospital_clinic
@@ -10,7 +10,7 @@ from . import hospital_patient
 from . import hospital_disease
 from . import hospital_lab_test
 from . import hospital_radiology_service
-from . import hospital_appointment
+from . import hospital_visit
 from . import hospital_vital_signs
 from . import hospital_diagnosis
 from . import hospital_prescription
@@ -21,3 +21,5 @@ from . import hospital_lab_test_result
 from . import hospital_radiology_order
 from . import hospital_radiology_result
 from . import hospital_medicine
+from . import resource_calendar_attendance
+from . import calendar_event

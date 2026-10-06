@@ -8,3 +8,5 @@ class HospitalDoctor(models.Model):
     consultation_fee = fields.Float(string='Consultation Fee')
     specialization_id = fields.Many2one(comodel_name='hospital.specialization', string='Specialization', ondelete='restrict')
     clinic_ids = fields.Many2many(comodel_name='hospital.clinic', relation='doctor_clinic_rel', column1='doctor_id', column2='clinic_id')
+    attendance_ids = fields.One2many(related='resource_calendar_id.attendance_ids', store=False, readonly=False, string='Working Days & Times')
+    
