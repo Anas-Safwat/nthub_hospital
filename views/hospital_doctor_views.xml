@@ -18,7 +18,16 @@
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <form>
-                <sheet>
+                    <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_appointment_types"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-calendar">
+                            <field name="appointment_type_count" string="Appointment Types"
+                                widget="statinfo" />
+                        </button>
+                    </div>
                     <div class="d-flex flex-column flex-sm-row align-items-center">
                         <div class="o_employee_avatar ms-2 p-0">
                             <field name="image_1920" widget="image" class="m-0"
@@ -55,8 +64,7 @@
                             <field name="department_id" />
                         </group>
                         <group string="Clinic &amp; Financial ">
-                            <field name="clinic_ids" widget="many2many_tags"
-                                options="{'color_field' : 'color'}" />
+                            <field name="clinic_ids" widget="many2many_tags" />
                             <field name="currency_id" invisible="1" />
                             <field name="consultation_fee" widget="monetary"
                                 options="{'currency_field' : 'currency_id'}" />
@@ -68,8 +76,8 @@
                                 <list editable="bottom">
                                     <field name="clinic_id" />
                                     <field name="dayofweek" />
-                                    <field name="hour_from" />
-                                    <field name="hour_to" />
+                                    <field name="hour_from" widget="float_time" />
+                                    <field name="hour_to" widget="float_time" />
                                 </list>
                             </field>
                         </page>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="appointment_type_view_form_inherit_hospital" model="ir.ui.view">
+        <field name="name">appointment.type.view.form.inherit.hospital</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='left_details']" position="inside">
+                <field name="doctor_id"/>
+                <field name="doctor_clinic_ids" invisible="1"/>
+                <field name="clinic_id" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_tree_inherit_hospital" model="ir.ui.view">
+        <field name="name">appointment.type.view.list.inherit.hospital</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="doctor_id" optional="show"/>
+                <field name="clinic_id" optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='location_id']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_ids']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -7,8 +7,6 @@ access_hospital_lab_test,hospital.lab.test.manager,model_hospital_lab_test,,1,1,
 access_hospital_radiology_service,hospital.radiology.service.manager,model_hospital_radiology_service,,1,1,1,1
 access_hospital_vital_signs,hospital.vital.signs.manager,model_hospital_vital_signs,,1,1,1,1
 access_hospital_diagnosis,hospital.diagnosis.manager,model_hospital_diagnosis,,1,1,1,1
-access_hospital_prescription,hospital.prescription.manager,model_hospital_prescription,,1,1,1,1
-access_hospital_prescription_line,hospital.prescription.line.manager,model_hospital_prescription_line,,1,1,1,1
 access_hospital_lab_order,hospital.lab.order.manager,model_hospital_lab_order,,1,1,1,1
 access_hospital_lab_order_line,hospital.lab.order.line.manager,model_hospital_lab_order_line,,1,1,1,1
 access_hospital_lab_test_result,hospital.lab.test.result.manager,model_hospital_lab_test_result,,1,1,1,1

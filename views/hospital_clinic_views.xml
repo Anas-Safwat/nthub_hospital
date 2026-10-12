@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hospital_clinic_view_list" model="ir.ui.view">
+        <field name="name">hospital.clinic.view.list</field>
+        <field name="model">hospital.clinic</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="clinics">
+                <field name="name" />
+                <field name="department_id" />
+                <field name="location" />
+                <field name="capacity" />
+                <field name="is_active" />
+            </list>
+        </field>
+    </record>
+
+    <record id="hospital_clinic_view_form" model="ir.ui.view">
+        <field name="name">hospital.clinic.view.form</field>
+        <field name="model">hospital.clinic</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <h1>
+                        <field name="name" placeholder="clinic's name" />
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="department_id" />
+                            <field name="location" />
+                        </group>
+                        <group>
+                            <field name="capacity" />
+                            <field name="is_active" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hospital_clinic_action" model="ir.actions.act_window">
+        <field name="name">clinics</field>
+        <field name="res_model">hospital.clinic</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

@@ -23,3 +23,5 @@ from . import hospital_radiology_result
 from . import hospital_medicine
 from . import resource_calendar_attendance
 from . import calendar_event
+from . import appointment_type
+
