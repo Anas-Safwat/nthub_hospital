@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         TIMETABLE SEARCH VIEW
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_timetable_view_search" model="ir.ui.view">
+        <field name="name">hospital.timetable.view.search</field>
+        <field name="model">hospital.timetable</field>
+        <field name="arch" type="xml">
+            <search string="Search Timetables">
+                <field name="doctor_id" string="Doctor" />
+                <field name="name" string="Title" />
+                <filter name="filter_current_month" string="Current Month"
+                    domain="[
+                    ('date_from', '&lt;=', (context_today() + relativedelta(day=31)).strftime('%Y-%m-%d')),
+                    ('date_to', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))
+                ]" />
+                <separator />
+                <filter name="filter_future" string="Future"
+                    domain="[('date_to', '&gt;=', context_today().strftime('%Y-%m-%d'))]" />
+                <filter name="filter_past" string="Past"
+                    domain="[('date_to', '&lt;', context_today().strftime('%Y-%m-%d'))]" />
+                <group>
+                    <filter name="group_doctor" string="Doctor" context="{'group_by': 'doctor_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         TIMETABLE LIST VIEW
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_timetable_view_list" model="ir.ui.view">
+        <field name="name">hospital.timetable.view.list</field>
+        <field name="model">hospital.timetable</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="Timetables">
+                <field name="name" />
+                <field name="doctor_id" />
+                <field name="date_from" />
+                <field name="date_to" />
+                <field name="slot_count" string="Slots" />
+                <field name="available_slot_count" string="Available" />
+                <field name="booked_slot_count" string="Booked" />
+            </list>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         TIMETABLE FORM VIEW
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_timetable_view_form" model="ir.ui.view">
+        <field name="name">hospital.timetable.view.form</field>
+        <field name="model">hospital.timetable</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_generate_slots" string="Generate Slots" type="object"
+                        class="btn-primary"
+                        confirm="This will regenerate all available slots. Continue?" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Dr. Ahmed – January 2026" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Doctor">
+                            <field name="doctor_id" />
+                            <field name="slot_duration" widget="float_time" />
+
+                        </group>
+                        <group string="Period">
+                            <field name="date_from" />
+                            <field name="date_to" />
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="slot_count" string="Total Slots" />
+                            <field name="available_slot_count" string="Available" />
+                            <field name="booked_slot_count" string="Booked" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="slots" string="Generated Slots">
+                            <field name="slot_ids">
+                                <list editable="bottom" decoration-success="state == 'available'"
+                                    decoration-danger="state == 'booked'">
+                                    <field name="slot_date" />
+                                    <field name="hour_from" widget="float_time" />
+                                    <field name="hour_to" widget="float_time" />
+                                    <field name="state" widget="badge"
+                                        decoration-success="state == 'available'"
+                                        decoration-danger="state == 'booked'" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         TIMETABLE ACTION
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_timetable_action" model="ir.actions.act_window">
+        <field name="name">Timetables</field>
+        <field name="res_model">hospital.timetable</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hospital_timetable_view_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a timetable for a doctor
+            </p>
+            <p> Select a doctor and date range, then click <b>Generate Slots</b> to create bookable
+                appointment slots from their working schedule. </p>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         TIMETABLE MENU ITEM (standalone — user will move it later)
+         ════════════════════════════════════════════════════════════════ -->
+    <menuitem
+        id="hospital_timetable_menu"
+        name="Timetables"
+        action="hospital_timetable_action"
+        parent="hospital_menu"
+        sequence="65" />
+
+</odoo>

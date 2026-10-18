@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         AVAILABLE SLOTS — SEARCH VIEW
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_timetable_slot_view_search" model="ir.ui.view">
+        <field name="name">hospital.timetable.slot.view.search</field>
+        <field name="model">hospital.timetable.slot</field>
+        <field name="arch" type="xml">
+            <search string="Search Available Slots">
+                <field name="doctor_id" string="Doctor" />
+                <field name="slot_date" string="Date" />
+                <filter name="filter_available" string="Available"
+                    domain="[('state', '=', 'available')]" />
+                <filter name="filter_booked" string="Booked"
+                    domain="[('state', '=', 'booked')]" />
+                <separator />
+                <filter name="filter_today" string="Today"
+                    domain="[('slot_date', '=', context_today().strftime('%Y-%m-%d'))]" />
+                <filter name="filter_this_week" string="This Week"
+                    domain="[
+                    ('slot_date', '&gt;=', (context_today() + relativedelta(weeks=-1, days=1, weekday=0)).strftime('%Y-%m-%d')),
+                    ('slot_date', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d'))
+                ]" />
+                <filter name="filter_future" string="Upcoming"
+                    domain="[('slot_date', '&gt;=', context_today().strftime('%Y-%m-%d'))]" />
+                <separator />
+                <group>
+                    <filter name="group_doctor" string="Doctor" context="{'group_by': 'doctor_id'}" />
+                    <filter name="group_date" string="Date" context="{'group_by': 'slot_date'}" />
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         AVAILABLE SLOTS — LIST VIEW
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_timetable_slot_view_list" model="ir.ui.view">
+        <field name="name">hospital.timetable.slot.view.list</field>
+        <field name="model">hospital.timetable.slot</field>
+        <field name="arch" type="xml">
+            <list string="Available Slots"
+                decoration-success="state == 'available'"
+                decoration-muted="state == 'booked'">
+                <field name="doctor_id" />
+                <field name="slot_date" />
+                <field name="hour_from" widget="float_time" />
+                <field name="hour_to" widget="float_time" />
+                <field name="state" widget="badge"
+                    decoration-success="state == 'available'"
+                    decoration-danger="state == 'booked'" />
+                <field name="appointment_id" optional="show" />
+                <button name="action_book_appointment"
+                    string="Book"
+                    type="object"
+                    class="btn-primary"
+                    invisible="state != 'available'" />
+            </list>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         AVAILABLE SLOTS — FORM VIEW (read-only detail)
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_timetable_slot_view_form" model="ir.ui.view">
+        <field name="name">hospital.timetable.slot.view.form</field>
+        <field name="model">hospital.timetable.slot</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_book_appointment"
+                        string="Book Appointment"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'available'" />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Slot Details">
+                            <field name="doctor_id" />
+                            <field name="slot_date" />
+                            <field name="hour_from" widget="float_time" />
+                            <field name="hour_to" widget="float_time" />
+                        </group>
+                        <group string="Booking">
+                            <field name="timetable_id" />
+                            <field name="appointment_id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         AVAILABLE SLOTS — ACTION (default: Available + Upcoming)
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_timetable_slot_action" model="ir.actions.act_window">
+        <field name="name">Available Slots</field>
+        <field name="res_model">hospital.timetable.slot</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hospital_timetable_slot_view_search" />
+        <field name="context">{'search_default_filter_available': 1, 'search_default_filter_future':
+            1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No available slots found
+            </p>
+            <p> Go to <b>Timetables</b> and click <b>Generate Slots</b> to create bookable slots
+                from a doctor's working schedule. </p>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         AVAILABLE SLOTS — MENU ITEM
+         ════════════════════════════════════════════════════════════════ -->
+    <menuitem
+        id="hospital_available_slots_menu"
+        name="Available Slots"
+        action="hospital_timetable_slot_action"
+        parent="hospital_menu"
+        sequence="62" />
+
+</odoo>

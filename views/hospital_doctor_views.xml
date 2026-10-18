@@ -21,14 +21,6 @@
                 <sheet>
                     <!-- ── Smart Buttons ── -->
                     <div class="oe_button_box" name="button_box">
-                        <!-- Req #7: Appointments smart button (booked calendar.event records) -->
-                        <button name="action_view_appointments"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-calendar-check-o">
-                            <field name="appointment_count" string="Appointments"
-                                widget="statinfo" />
-                        </button>
                     </div>
 
                     <!-- ── Avatar + Name ── -->
@@ -70,10 +62,9 @@
                             <field name="department_id" />
                         </group>
                         <group string="Clinic &amp; Consultation">
-                            <field name="clinic_ids" widget="many2many_tags" readonly="1"
-                                string="Clinics (from Schedule)"
-                                options="{'no_create': True, 'no_edit': True}" />
-                            <field name="consultation_duration" widget="float_time" />
+                            <field name="clinic_ids" widget="many2many_tags"
+                                string="Clinics"
+                            />
                         </group>
                     </group>
 
@@ -83,29 +74,10 @@
                             <field name="attendance_ids">
                                 <list editable="bottom">
                                     <field name="name" readonly="1" column_invisible="True" />
-                                    <field name="clinic_id" />
                                     <field name="dayofweek" />
+                                    <field name="type" />
                                     <field name="hour_from" widget="float_time" />
                                     <field name="hour_to" widget="float_time" />
-                                </list>
-                            </field>
-                        </page>
-
-                        <!-- Req #6: Clinics Validity page -->
-                        <page string="Clinics Validity" name="clinics_validity">
-                            <p class="text-muted" invisible="appointment_type_ids">
-                                Add at least one schedule slot for a clinic to configure
-                                availability periods.
-                            </p>
-                            <field name="appointment_type_ids">
-                                <list editable="bottom" create="0" delete="0">
-                                    <field name="clinic_id" readonly="1" string="Clinic" />
-                                    <field name="start_datetime"
-                                        string="Available From"
-                                        help="Start of the period during which the doctor is available at this clinic." />
-                                    <field name="end_datetime"
-                                        string="Available Until"
-                                        help="End of the period during which the doctor is available at this clinic." />
                                 </list>
                             </field>
                         </page>

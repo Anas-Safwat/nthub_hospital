@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         VISIT — SEARCH VIEW
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_visit_view_search" model="ir.ui.view">
+        <field name="name">hospital.visit.view.search</field>
+        <field name="model">hospital.visit</field>
+        <field name="arch" type="xml">
+            <search string="Search Visits">
+                <field name="patient_id" string="Patient" />
+                <field name="doctor_id" string="Doctor" />
+                <field name="visit_date" string="Visit Date" />
+                <field name="appointment_id" string="Appointment" />
+
+                <filter name="filter_first_visit" string="First Visit"
+                    domain="[('visit_type', '=', 'first_visit')]" />
+                <filter name="filter_follow_up" string="Follow Up"
+                    domain="[('visit_type', '=', 'follow_up')]" />
+                <filter name="filter_consultation" string="Consultation"
+                    domain="[('visit_type', '=', 'consultation')]" />
+                <separator />
+                <filter name="filter_today" string="Today"
+                    domain="[('visit_date', '=', context_today().strftime('%Y-%m-%d'))]" />
+
+                <group>
+                    <filter name="group_doctor" string="Doctor" context="{'group_by': 'doctor_id'}" />
+                    <filter name="group_patient" string="Patient"
+                        context="{'group_by': 'patient_id'}" />
+                    <filter name="group_visit_type" string="Visit Type"
+                        context="{'group_by': 'visit_type'}" />
+                    <filter name="group_visit_date" string="Visit Date"
+                        context="{'group_by': 'visit_date'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         VISIT — LIST VIEW
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_visit_view_list" model="ir.ui.view">
+        <field name="name">hospital.visit.view.list</field>
+        <field name="model">hospital.visit</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="Patient Visits">
+                <field name="patient_id" />
+                <field name="doctor_id" />
+                <field name="visit_date" />
+                <field name="visit_type" widget="badge"
+                    decoration-primary="visit_type == 'first_visit'"
+                    decoration-success="visit_type == 'follow_up'"
+                    decoration-warning="visit_type == 'consultation'" />
+            </list>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         VISIT — FORM VIEW
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_visit_view_form" model="ir.ui.view">
+        <field name="name">hospital.visit.view.form</field>
+        <field name="model">hospital.visit</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <form string="Patient Visit">
+                <sheet>
+                    <group>
+                        <group string="Patient &amp; Doctor">
+                            <field name="patient_id" />
+                            <field name="doctor_id" domain="[('employment_type', '=', 'doctor')]" />
+                        </group>
+                        <group string="Visit Details">
+                            <field name="visit_date" />
+                            <field name="visit_type" widget="radio" options="{'horizontal': true}" />
+                            <field name="appointment_id" readonly="1" invisible="not appointment_id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         VISIT — ACTION
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_visit_action" model="ir.actions.act_window">
+        <field name="name">Visits</field>
+        <field name="res_model">hospital.visit</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hospital_visit_view_search" />
+        <field name="context">{'search_default_group_patient': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No visits recorded yet
+            </p>
+            <p>
+                Visits are created automatically when you confirm an appointment, or you can create
+                a walk-in visit directly from here.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -48,4 +48,10 @@
         action="hospital_clinic_action"
         parent="hospital_menu"
         sequence="70" />
+    <menuitem
+        id="hospital_visits_menu"
+        name="Visits"
+        action="hospital_visit_action"
+        parent="hospital_menu"
+        sequence="80" />
 </odoo>

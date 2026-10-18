@@ -11,6 +11,7 @@
         "security/ir.model.access.csv",
         "security/rules.xml",
         "security/security.xml",
+        "views/appointment_type_views.xml",
         "views/hospital_appointment_views.xml",
         "views/hospital_clinic_views.xml",
         "views/hospital_department_views.xml",
@@ -19,7 +20,9 @@
         "views/hospital_nurse_views.xml",
         "views/hospital_patient_views.xml",
         "views/hospital_reciptionist_views.xml",
-        "views/appointment_type_views.xml",
+        "views/hospital_timetable_views.xml",
+        "views/hospital_timetable_slot_views.xml",
+        "views/hospital_visit_views.xml"
     ],
     'demo': [
     ],

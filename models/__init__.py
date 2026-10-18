@@ -24,4 +24,6 @@ from . import hospital_medicine
 from . import resource_calendar_attendance
 from . import calendar_event
 from . import appointment_type
-
+from . import hospital_appointment
+from . import hospital_timetable
+from . import hospital_timetable_slot
