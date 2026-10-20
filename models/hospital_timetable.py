@@ -7,7 +7,7 @@ class HospitalTimetable(models.Model):
     _description = 'Doctor Timetable'
     _order = 'date_from desc'
 
-    name = fields.Char(string="Title", required=True, placeholder="e.g. January 2026")
+    name = fields.Char(string="Title",compute='_compute_name',store=True,readonly=False)
     doctor_id = fields.Many2one('hr.employee', string="Doctor", required=True,
                                 domain="[('employment_type', '=', 'doctor')]")
     slot_duration = fields.Float(string="Slot Duration (Minutes)", default=30.0)
@@ -54,6 +54,7 @@ class HospitalTimetable(models.Model):
                             'slot_date': current_date,
                             'hour_from': current_hour,
                             'hour_to': current_hour + duration_hours,
+                            'type': line.type,
                             'state': 'available',
                         })
                         current_hour += duration_hours
@@ -61,3 +62,25 @@ class HospitalTimetable(models.Model):
                 current_date += timedelta(days=1)
 
             self.env['hospital.timetable.slot'].create(slots_to_create)
+            
+
+    @api.depends('doctor_id', 'date_from', 'date_to')
+    def _compute_name(self):
+        for rec in self:
+            parts = []
+            if rec.doctor_id:
+                parts.append('Dr '+rec.doctor_id.name)
+
+            if rec.date_from and rec.date_to:
+                # If both dates are in the same month & year -> "January 2026"
+                if (rec.date_from.month == rec.date_to.month
+                        and rec.date_from.year == rec.date_to.year):
+                    parts.append(rec.date_from.strftime('%B %Y'))
+                else:
+                    parts.append(
+                        f"{rec.date_from.strftime('%d/%m/%Y')} - {rec.date_to.strftime('%d/%m/%Y')}"
+                    )
+            elif rec.date_from:
+                parts.append(rec.date_from.strftime('%d/%m/%Y'))
+
+            rec.name = " – ".join(parts) if parts else _("New Timetable")

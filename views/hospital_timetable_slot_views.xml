@@ -11,10 +11,16 @@
             <search string="Search Available Slots">
                 <field name="doctor_id" string="Doctor" />
                 <field name="slot_date" string="Date" />
+                <field name="type" string="Slot Type" />
                 <filter name="filter_available" string="Available"
                     domain="[('state', '=', 'available')]" />
                 <filter name="filter_booked" string="Booked"
                     domain="[('state', '=', 'booked')]" />
+                <separator />
+                <filter name="filter_consultation" string="Consultation"
+                    domain="[('type', '=', 'consultation')]" />
+                <filter name="filter_operation" string="Operation"
+                    domain="[('type', '=', 'operation')]" />
                 <separator />
                 <filter name="filter_today" string="Today"
                     domain="[('slot_date', '=', context_today().strftime('%Y-%m-%d'))]" />
@@ -28,10 +34,44 @@
                 <separator />
                 <group>
                     <filter name="group_doctor" string="Doctor" context="{'group_by': 'doctor_id'}" />
+                    <filter name="group_type" string="Slot Type" context="{'group_by': 'type'}" />
                     <filter name="group_date" string="Date" context="{'group_by': 'slot_date'}" />
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}" />
                 </group>
             </search>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         AVAILABLE SLOTS — CALENDAR VIEW
+         ════════════════════════════════════════════════════════════════ -->
+    <record id="hospital_timetable_slot_view_calendar" model="ir.ui.view">
+        <field name="name">hospital.timetable.slot.view.calendar</field>
+        <field name="model">hospital.timetable.slot</field>
+        <field name="arch" type="xml">
+            <calendar string="Available Slots"
+                date_start="start_datetime"
+                date_stop="stop_datetime"
+                date_delay="duration"
+                color="calendar_color"
+                mode="week"
+                event_open_popup="true"
+                event_limit="5"
+                quick_create="false"
+                create="false"
+                delete="false">
+                <field name="doctor_id" filters="1" avatar_field="avatar_128"
+                    options="{'icon': 'fa fa-user-md'}" />
+                <field name="type" filters="1" widget="badge"
+                    decoration-info="type == 'consultation'"
+                    decoration-warning="type == 'operation'" />
+                <field name="state" filters="1" widget="badge"
+                    decoration-success="state == 'available'"
+                    decoration-danger="state == 'booked'" />
+                <field name="appointment_id" invisible="not appointment_id"
+                    options="{'icon': 'fa fa-calendar-check-o'}" />
+                <field name="timetable_id" invisible="1" />
+            </calendar>
         </field>
     </record>
 
@@ -49,6 +89,9 @@
                 <field name="slot_date" />
                 <field name="hour_from" widget="float_time" />
                 <field name="hour_to" widget="float_time" />
+                <field name="type" widget="badge"
+                    decoration-info="type == 'consultation'"
+                    decoration-warning="type == 'operation'" />
                 <field name="state" widget="badge"
                     decoration-success="state == 'available'"
                     decoration-danger="state == 'booked'" />
@@ -70,28 +113,37 @@
         <field name="model">hospital.timetable.slot</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <button name="action_book_appointment"
-                        string="Book Appointment"
-                        type="object"
-                        class="btn-primary"
-                        invisible="state != 'available'" />
-                    <field name="state" widget="statusbar" />
-                </header>
+                <field name="state" invisible="1" />
                 <sheet>
+                    <widget name="web_ribbon" title="Booked" bg_color="text-bg-danger"
+                        invisible="state != 'booked'" />
                     <group>
-                        <group string="Slot Details">
-                            <field name="doctor_id" />
-                            <field name="slot_date" />
-                            <field name="hour_from" widget="float_time" />
-                            <field name="hour_to" widget="float_time" />
+                        <group string="Slot Info">
+                            <field name="doctor_id" readonly="1" />
+                            <field name="slot_date" readonly="1" />
+                            <field name="hour_from" widget="float_time" readonly="1" />
+                            <field name="hour_to" widget="float_time" readonly="1" />
+                            <field name="type" widget="badge"
+                                decoration-info="type == 'consultation'"
+                                decoration-warning="type == 'operation'" />
+                            <field name="timetable_id" invisible="1" />
                         </group>
-                        <group string="Booking">
-                            <field name="timetable_id" />
-                            <field name="appointment_id" />
+
+                        <group string="Patient">
+                            <field name="patient_id" />
+                            <field name="patient_name" />
+                            <field name="patient_phone" />
+                            <field name="appointment_id" readonly="1" invisible="state != 'booked'" />
                         </group>
                     </group>
                 </sheet>
+                <footer invisible="state == 'booked'">
+                    <button name="action_book_appointment"
+                        string="Book Appointment"
+                        type="object"
+                        class="btn-primary" />
+                    <button string="Discard" class="btn-secondary" special="cancel" />
+                </footer>
             </form>
         </field>
     </record>
@@ -102,7 +154,7 @@
     <record id="hospital_timetable_slot_action" model="ir.actions.act_window">
         <field name="name">Available Slots</field>
         <field name="res_model">hospital.timetable.slot</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">calendar,list,form</field>
         <field name="search_view_id" ref="hospital_timetable_slot_view_search" />
         <field name="context">{'search_default_filter_available': 1, 'search_default_filter_future':
             1}</field>

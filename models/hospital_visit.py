@@ -8,7 +8,7 @@ class HospitalVisit(models.Model):
     patient_id = fields.Many2one('hospital.patient', string="Patient", required=True)
     doctor_id = fields.Many2one('hr.employee', string="Doctor", required=True)
     visit_date = fields.Date(string="Visit Date", default=fields.Date.context_today)
-    
+    clinic_id = fields.Many2one('hospital.clinic', string="Clinic")
     appointment_id = fields.Many2one('hospital.appointment', string="Appointment", required=False)
     
     visit_type = fields.Selection([

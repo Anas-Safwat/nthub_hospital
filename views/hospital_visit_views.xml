@@ -71,6 +71,7 @@
                         <group string="Patient &amp; Doctor">
                             <field name="patient_id" />
                             <field name="doctor_id" domain="[('employment_type', '=', 'doctor')]" />
+                            <field name="clinic_id" />
                         </group>
                         <group string="Visit Details">
                             <field name="visit_date" />

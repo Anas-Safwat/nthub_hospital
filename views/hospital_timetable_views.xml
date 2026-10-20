@@ -94,6 +94,9 @@
                                     <field name="slot_date" />
                                     <field name="hour_from" widget="float_time" />
                                     <field name="hour_to" widget="float_time" />
+                                    <field name="type" widget="badge"
+                                        decoration-info="type == 'consultation'"
+                                        decoration-warning="type == 'operation'" />
                                     <field name="state" widget="badge"
                                         decoration-success="state == 'available'"
                                         decoration-danger="state == 'booked'" />
