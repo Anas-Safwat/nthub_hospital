@@ -152,7 +152,7 @@
          AVAILABLE SLOTS — ACTION (default: Available + Upcoming)
          ════════════════════════════════════════════════════════════════ -->
     <record id="hospital_timetable_slot_action" model="ir.actions.act_window">
-        <field name="name">Available Slots</field>
+        <field name="name">Reservations</field>
         <field name="res_model">hospital.timetable.slot</field>
         <field name="view_mode">calendar,list,form</field>
         <field name="search_view_id" ref="hospital_timetable_slot_view_search" />

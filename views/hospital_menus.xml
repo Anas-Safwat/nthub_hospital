@@ -31,7 +31,7 @@
         sequence="10" />
     <menuitem
         id="hospital_available_slots_menu"
-        name="Available Slots"
+        name="Reservations"
         action="hospital_timetable_slot_action"
         parent="hospital_operations_menu"
         sequence="20" />
