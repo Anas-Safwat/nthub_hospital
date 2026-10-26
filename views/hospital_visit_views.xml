@@ -14,6 +14,15 @@
                 <field name="visit_date" string="Visit Date" />
                 <field name="appointment_id" string="Appointment" />
 
+                <filter name="filter_draft" string="Draft"
+                    domain="[('state', '=', 'draft')]" />
+                <filter name="filter_paid" string="Paid"
+                    domain="[('state', '=', 'paid')]" />
+                <filter name="filter_in_progress" string="In Progress"
+                    domain="[('state', '=', 'in_progress')]" />
+                <filter name="filter_done" string="Done"
+                    domain="[('state', '=', 'done')]" />
+                <separator />
                 <filter name="filter_first_visit" string="First Visit"
                     domain="[('visit_type', '=', 'first_visit')]" />
                 <filter name="filter_follow_up" string="Follow Up"
@@ -25,11 +34,14 @@
                     domain="[('visit_date', '=', context_today().strftime('%Y-%m-%d'))]" />
 
                 <group>
-                    <filter name="group_doctor" string="Doctor" context="{'group_by': 'doctor_id'}" />
+                    <filter name="group_doctor" string="Doctor"
+                        context="{'group_by': 'doctor_id'}" />
                     <filter name="group_patient" string="Patient"
                         context="{'group_by': 'patient_id'}" />
                     <filter name="group_visit_type" string="Visit Type"
                         context="{'group_by': 'visit_type'}" />
+                    <filter name="group_state" string="Status"
+                        context="{'group_by': 'state'}" />
                     <filter name="group_visit_date" string="Visit Date"
                         context="{'group_by': 'visit_date'}" />
                 </group>
@@ -45,7 +57,11 @@
         <field name="model">hospital.visit</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
-            <list string="Patient Visits">
+            <list string="Patient Visits"
+                decoration-info="state == 'draft'"
+                decoration-warning="state == 'paid'"
+                decoration-success="state == 'in_progress'"
+                decoration-muted="state == 'done'">
                 <field name="patient_id" />
                 <field name="doctor_id" />
                 <field name="visit_date" />
@@ -53,6 +69,12 @@
                     decoration-primary="visit_type == 'first_visit'"
                     decoration-success="visit_type == 'follow_up'"
                     decoration-warning="visit_type == 'consultation'" />
+                <field name="amount_total" widget="monetary" />
+                <field name="state" widget="badge"
+                    decoration-info="state == 'draft'"
+                    decoration-warning="state == 'paid'"
+                    decoration-success="state == 'in_progress'"
+                    decoration-muted="state == 'done'" />
             </list>
         </field>
     </record>
@@ -66,20 +88,115 @@
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <form string="Patient Visit">
+                <header>
+                    <button name="action_register_payment"
+                        string="Register Payment"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'draft'" />
+                    <button name="action_start_visit"
+                        string="Start Visit"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'paid'" />
+                    <button name="action_checkout"
+                        string="Check-out"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'in_progress'" />
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,paid,in_progress,done" />
+                </header>
                 <sheet>
+                    <!-- ── Smart Buttons ── -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="not invoice_id">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Invoice</span>
+                            </div>
+                        </button>
+                        <button name="action_view_payment"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-money"
+                            invisible="not payment_id">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Payment</span>
+                            </div>
+                        </button>
+                    </div>
+
                     <group>
                         <group string="Patient &amp; Doctor">
-                            <field name="patient_id" />
-                            <field name="doctor_id" domain="[('employment_type', '=', 'doctor')]" />
-                            <field name="clinic_id" />
+                            <field name="patient_id"
+                                readonly="state != 'draft'" />
+                            <field name="doctor_id"
+                                readonly="state != 'draft'" />
+                            <field name="clinic_id"
+                                readonly="state == 'done'" />
                         </group>
                         <group string="Visit Details">
-                            <field name="visit_date" />
-                            <field name="visit_type" widget="radio" options="{'horizontal': true}" />
-                            <field name="appointment_id" readonly="1" invisible="not appointment_id" />
+                            <field name="visit_date"
+                                readonly="state != 'draft'" />
+                            <field name="visit_type" widget="badge"
+                                decoration-primary="visit_type == 'first_visit'"
+                                decoration-success="visit_type == 'follow_up'"
+                                decoration-warning="visit_type == 'consultation'" />
+                            <field name="appointment_id" readonly="1"
+                                invisible="not appointment_id" />
+                            <field name="invoice_id" readonly="1"
+                                invisible="not invoice_id" />
+                            <field name="payment_id" readonly="1"
+                                invisible="not payment_id" />
+                            <field name="amount_total" widget="monetary" />
+                            <field name="currency_id" invisible="1" />
                         </group>
                     </group>
+
+                    <notebook>
+                        <page name="assessment" string="Assessment">
+                            <field name="assessment_notes"
+                                placeholder="Enter clinical assessment notes..."
+                                readonly="state != 'in_progress'" />
+                        </page>
+                        <page name="services" string="Services">
+                            <field name="service_line_ids"
+                                readonly="state == 'done'">
+                                <list editable="bottom">
+                                    <field name="product_id" />
+                                    <field name="name" />
+                                    <field name="quantity" />
+                                    <field name="price_unit" widget="monetary"
+                                        options="{'currency_field': 'currency_id'}" />
+                                    <field name="subtotal" widget="monetary"
+                                        options="{'currency_field': 'currency_id'}" />
+                                    <field name="invoice_line_id" readonly="1"
+                                        optional="hide" />
+                                    <field name="currency_id"
+                                        column_invisible="True" />
+                                </list>
+                            </field>
+                        </page>
+                        <page name="medicines" string="Medicines">
+                            <field name="medicine_line_ids"
+                                readonly="state != 'in_progress'">
+                                <list editable="bottom">
+                                    <field name="medicine_id" />
+                                    <field name="dosage" />
+                                    <field name="frequency" />
+                                    <field name="duration" />
+                                    <field name="quantity" />
+                                    <field name="instructions" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
+                <chatter />
             </form>
         </field>
     </record>
@@ -98,8 +215,7 @@
                 No visits recorded yet
             </p>
             <p>
-                Visits are created automatically when you confirm an appointment, or you can create
-                a walk-in visit directly from here.
+                Visits are created automatically when you confirm an appointment.
             </p>
         </field>
     </record>

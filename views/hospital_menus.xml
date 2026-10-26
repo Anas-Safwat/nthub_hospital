@@ -1,57 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <!-- ═══════════════════════════════════════════════════════
+         ROOT MENU
+         ═══════════════════════════════════════════════════════ -->
     <menuitem
         id="hospital_menu"
         name="Hospital"
-    />
+        sequence="50" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         OPERATIONS — Daily workflow
+         ═══════════════════════════════════════════════════════ -->
+    <menuitem
+        id="hospital_operations_menu"
+        name="Operations"
+        parent="hospital_menu"
+        sequence="10" />
     <menuitem
         id="hospital_patient_menu"
         name="Patients"
         action="hospital_patient_action"
-        parent="hospital_menu"
-        sequence="10" />
-
-    <menuitem
-        id="hospital_doctor_menu"
-        name="Doctors"
-        action="hospital_doctor_action"
-        parent="hospital_menu"
-        sequence="20" />
-
-    <menuitem
-        id="hospital_nurse_menu"
-        name="Nurses"
-        action="hospital_nurse_action"
-        parent="hospital_menu"
-        sequence="30" />
-    <menuitem
-        id="hospital_receptionist_menu"
-        name="Receptionists"
-        action="hospital_receptionist_action"
-        parent="hospital_menu"
-        sequence="40" />
-    <menuitem
-        id="hospital_department_menu"
-        name="Departments"
-        action="hospital_department_action"
-        parent="hospital_menu"
-        sequence="50" />
+        parent="hospital_operations_menu"
+        sequence="5" />
     <menuitem
         id="hospital_appointments_menu"
         name="Appointments"
         action="hospital_appointment_action"
-        parent="hospital_menu"
-        sequence="60" />
+        parent="hospital_operations_menu"
+        sequence="10" />
     <menuitem
-        id="hospital_clinics_menu"
-        name="Clinics"
-        action="hospital_clinic_action"
-        parent="hospital_menu"
-        sequence="70" />
+        id="hospital_available_slots_menu"
+        name="Available Slots"
+        action="hospital_timetable_slot_action"
+        parent="hospital_operations_menu"
+        sequence="20" />
     <menuitem
         id="hospital_visits_menu"
         name="Visits"
         action="hospital_visit_action"
+        parent="hospital_operations_menu"
+        sequence="30" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         STAFF — Hospital personnel
+         ═══════════════════════════════════════════════════════ -->
+    <menuitem
+        id="hospital_staff_menu"
+        name="Staff"
         parent="hospital_menu"
-        sequence="80" />
+        sequence="20" />
+    <menuitem
+        id="hospital_doctor_menu"
+        name="Doctors"
+        action="hospital_doctor_action"
+        parent="hospital_staff_menu"
+        sequence="10" />
+    <menuitem
+        id="hospital_nurse_menu"
+        name="Nurses"
+        action="hospital_nurse_action"
+        parent="hospital_staff_menu"
+        sequence="20" />
+    <menuitem
+        id="hospital_receptionist_menu"
+        name="Receptionists"
+        action="hospital_receptionist_action"
+        parent="hospital_staff_menu"
+        sequence="30" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         FACILITIES — Organizational structure
+         ═══════════════════════════════════════════════════════ -->
+    <menuitem
+        id="hospital_facilities_menu"
+        name="Facilities"
+        parent="hospital_menu"
+        sequence="30" />
+    <menuitem
+        id="hospital_department_menu"
+        name="Departments"
+        action="hospital_department_action"
+        parent="hospital_facilities_menu"
+        sequence="10" />
+    <menuitem
+        id="hospital_clinics_menu"
+        name="Clinics"
+        action="hospital_clinic_action"
+        parent="hospital_facilities_menu"
+        sequence="20" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         CONFIGURATION — Setup & reference data
+         ═══════════════════════════════════════════════════════ -->
+    <menuitem
+        id="hospital_configuration_menu"
+        name="Configuration"
+        parent="hospital_menu"
+        sequence="100" />
+    <menuitem
+        id="hospital_timetable_menu"
+        name="Timetables"
+        action="hospital_timetable_action"
+        parent="hospital_configuration_menu"
+        sequence="10" />
+    <menuitem
+        id="hospital_service_menu"
+        name="Services"
+        action="hospital_service_action"
+        parent="hospital_configuration_menu"
+        sequence="20" />
+
 </odoo>

@@ -167,14 +167,4 @@
         </field>
     </record>
 
-    <!-- ════════════════════════════════════════════════════════════════
-         AVAILABLE SLOTS — MENU ITEM
-         ════════════════════════════════════════════════════════════════ -->
-    <menuitem
-        id="hospital_available_slots_menu"
-        name="Available Slots"
-        action="hospital_timetable_slot_action"
-        parent="hospital_menu"
-        sequence="62" />
-
 </odoo>

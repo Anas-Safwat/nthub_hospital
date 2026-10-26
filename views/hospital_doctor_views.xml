@@ -60,6 +60,7 @@
                             <field name="license_no" />
                             <field name="specialization_id" />
                             <field name="department_id" />
+                            <field name="service_ids" widget="many2many_tags" />
                         </group>
                         <group string="Clinic &amp; Consultation">
                             <field name="clinic_ids" widget="many2many_tags"

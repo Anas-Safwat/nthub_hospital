@@ -70,7 +70,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_confirm_visit"
+                    <button name="action_confirm"
                         string="Confirm"
                         type="object"
                         class="btn-primary"
@@ -100,6 +100,13 @@
                             <field name="slot_type" widget="badge"
                                 decoration-info="slot_type == 'consultation'"
                                 decoration-warning="slot_type == 'operation'" />
+                        </group>
+                    </group>
+
+                    <group invisible="state == 'draft'">
+                        <group string="Linked Records">
+                            <field name="visit_id" readonly="1" />
+                            <field name="invoice_id" readonly="1" />
                         </group>
                     </group>
                 </sheet>

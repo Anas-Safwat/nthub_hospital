@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ══════════════════════════════════════════════════════
+             SERVICE PRODUCTS — Underlying billable products
+             ══════════════════════════════════════════════════════ -->
+        <record id="product_service_consultation" model="product.product">
+            <field name="name">Consultation</field>
+            <field name="type">service</field>
+            <field name="lst_price">0.0</field>
+            <field name="sale_ok" eval="True" />
+            <field name="purchase_ok" eval="False" />
+        </record>
+
+        <record id="product_service_operation" model="product.product">
+            <field name="name">Operation</field>
+            <field name="type">service</field>
+            <field name="lst_price">0.0</field>
+            <field name="sale_ok" eval="True" />
+            <field name="purchase_ok" eval="False" />
+        </record>
+
+        <!-- ══════════════════════════════════════════════════════
+             HOSPITAL SERVICES — Managed by the hospital
+             ══════════════════════════════════════════════════════ -->
+        <record id="hospital_service_consultation" model="hospital.service">
+            <field name="name">Consultation</field>
+            <field name="sequence">10</field>
+            <field name="product_id" ref="product_service_consultation" />
+            <field name="description">General doctor consultation service.</field>
+        </record>
+
+        <record id="hospital_service_operation" model="hospital.service">
+            <field name="name">Operation</field>
+            <field name="sequence">20</field>
+            <field name="product_id" ref="product_service_operation" />
+            <field name="description">Surgical operation service.</field>
+        </record>
+
+    </data>
+</odoo>

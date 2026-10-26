@@ -126,14 +126,4 @@
         </field>
     </record>
 
-    <!-- ════════════════════════════════════════════════════════════════
-         TIMETABLE MENU ITEM (standalone — user will move it later)
-         ════════════════════════════════════════════════════════════════ -->
-    <menuitem
-        id="hospital_timetable_menu"
-        name="Timetables"
-        action="hospital_timetable_action"
-        parent="hospital_menu"
-        sequence="65" />
-
 </odoo>
