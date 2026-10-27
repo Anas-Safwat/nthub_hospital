@@ -38,6 +38,17 @@ class HospitalVisitServiceLine(models.Model):
         if self.product_id:
             self.price_unit = self.product_id.lst_price
 
+    def action_warn_billed_line_delete(self):
+        self.ensure_one()
+
+        if self.invoice_line_id:
+            raise UserError((
+                "This service is already linked to an invoice "
+                "and cannot be deleted."
+            ))
+
+        return True
+    
     @api.ondelete(at_uninstall=False)
     def _unlink_except_invoiced(self):
         for line in self:

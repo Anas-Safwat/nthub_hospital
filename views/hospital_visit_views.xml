@@ -173,10 +173,17 @@
                                 <list editable="bottom">
                                     <field name="product_id"
                                         readonly="invoice_line_id" />
-                                    <field name="invoice_line_id" readonly="1"
-                                        optional="hide" />
-                                    <field name="currency_id"
-                                        column_invisible="True" />
+                                    <field name="name" />
+                                    <button name="action_warn_billed_line_delete"
+                                        type="object"
+                                        icon="fa-trash"
+                                        title="This service is already invoiced and cannot be deleted."
+                                        invisible="not invoice_line_id" />
+
+                                    <control>
+                                        <create string="Add a service" />
+                                        <delete invisible="invoice_line_id" />
+                                    </control>
                                 </list>
                             </field>
                         </page>
@@ -193,7 +200,7 @@
                                     <field name="invoice_line_id" readonly="1"
                                         optional="hide" />
                                     <field name="currency_id"
-                                        column_invisible="True" />
+                                        column_invisible="True" /> 
                                 </list>
                             </field>
                         </page>
