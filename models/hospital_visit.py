@@ -2,6 +2,9 @@ from datetime import timedelta
 from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError, ValidationError
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class HospitalVisit(models.Model):
     _name = 'hospital.visit'
@@ -45,6 +48,10 @@ class HospitalVisit(models.Model):
     payment_id = fields.Many2one(
         'account.payment', string='Payment', readonly=True, copy=False,
     )
+    picking_id = fields.Many2one(
+        'stock.picking', string='Delivery Order',
+        readonly=True, copy=False,
+    )
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
         default=lambda self: self.env.company.currency_id,
@@ -66,10 +73,13 @@ class HospitalVisit(models.Model):
     )
 
     # ── Computed ──────────────────────────────────────────────────
-    @api.depends('service_line_ids.subtotal')
+    @api.depends('service_line_ids.subtotal', 'medicine_line_ids.subtotal')
     def _compute_amount_total(self):
         for rec in self:
-            rec.amount_total = sum(rec.service_line_ids.mapped('subtotal'))
+            rec.amount_total = (
+                sum(rec.service_line_ids.mapped('subtotal'))
+                + sum(rec.medicine_line_ids.mapped('subtotal'))
+            )
 
     # ── Visit type determination ──────────────────────────────────
     @api.model
@@ -176,7 +186,8 @@ class HospitalVisit(models.Model):
         self.state = 'in_progress'
 
     def action_checkout(self):
-        """Push unlinked service lines to the draft invoice, post it,
+        """Push unlinked service & medicine lines to the draft invoice,
+        create stock picking for medicines, post the invoice,
         and close the visit."""
         self.ensure_one()
         if self.state != 'in_progress':
@@ -198,7 +209,6 @@ class HospitalVisit(models.Model):
             self.invoice_id.write({
                 'invoice_line_ids': [Command.create({
                     'product_id': line.product_id.id,
-                    'name': line.name or line.product_id.name,
                     'quantity': line.quantity,
                     'price_unit': line.price_unit,
                 })],
@@ -209,9 +219,102 @@ class HospitalVisit(models.Model):
             ).sorted('id', reverse=True)[0]
             line.invoice_line_id = new_aml.id
 
+        # Push unlinked medicine lines to the draft invoice
+        for line in self.medicine_line_ids:
+            if line.invoice_line_id:
+                continue
+            self.invoice_id.write({
+                'invoice_line_ids': [Command.create({
+                    'product_id': line.product_id.id,
+                    'quantity': line.quantity,
+                    'price_unit': line.price_unit,
+                })],
+            })
+            new_aml = self.invoice_id.invoice_line_ids.filtered(
+                lambda l: l.product_id
+            ).sorted('id', reverse=True)[0]
+            line.invoice_line_id = new_aml.id
+
         # Post the invoice and close the visit
         self.invoice_id.action_post()
         self.state = 'done'
+
+    # ── Stock picking ─────────────────────────────────────────────
+    def _create_medicine_picking(self):
+        """Create and auto-validate an outgoing delivery for
+        prescribed medicines."""
+        self.ensure_one()
+        warehouse = self.env['stock.warehouse'].search(
+            [('company_id', '=', self.env.company.id)], limit=1,
+        )
+        if not warehouse:
+            raise UserError(_(
+                "No warehouse found for the current company. "
+                "Please configure one first."
+            ))
+
+        picking_type = self.env['stock.picking.type'].search(
+            [('code', '=', 'outgoing'),
+             ('warehouse_id', '=', warehouse.id)],
+            limit=1,
+        )
+        if not picking_type:
+            raise UserError(_(
+                "No outgoing operation type found for warehouse '%s'.",
+                warehouse.name,
+            ))
+
+        customer_loc = self.env.ref('stock.stock_location_customers')
+        source_loc = warehouse.lot_stock_id  # WH/Stock
+
+        move_vals = []
+        for line in self.medicine_line_ids:
+            move_vals.append(Command.create({
+                'product_id': line.product_id.id,
+                'product_uom_qty': line.quantity,
+                'product_uom': line.product_id.uom_id.id,
+                'location_id': source_loc.id,
+                'location_dest_id': customer_loc.id,
+            }))
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type.id,
+            'partner_id': self.patient_id.partner_id.id,
+            'origin': _('Visit %s', self.id),
+            'location_id': source_loc.id,
+            'location_dest_id': customer_loc.id,
+            'move_ids': move_vals,
+        })
+
+        picking.action_confirm()
+
+        for move in picking.move_ids:
+            move.quantity = move.product_uom_qty
+            move.picked = True
+
+        # button_validate may return a wizard dict (e.g. immediate
+        # transfer or backorder confirmation); if so, run it.
+        result = picking.button_validate()
+        if isinstance(result, dict) and result.get('res_model'):
+            wizard_model = result['res_model']
+            wizard_id = result.get('res_id')
+            if wizard_id:
+                wizard = self.env[wizard_model].browse(wizard_id)
+            else:
+                ctx = result.get('context', {})
+                wizard = (
+                    self.env[wizard_model]
+                    .with_context(**ctx)
+                    .create({})
+                )
+            if hasattr(wizard, 'process'):
+                wizard.process()
+
+        self.picking_id = picking.id
+        _logger.info(
+            'Visit %s: created and validated delivery %s',
+            self.id, picking.name,
+        )
 
     # ── Smart-button helpers ──────────────────────────────────────
     def action_view_invoice(self):
@@ -236,6 +339,19 @@ class HospitalVisit(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
             'res_id': self.payment_id.id,
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+        }
+
+    def action_view_picking(self):
+        """Open the linked delivery order."""
+        self.ensure_one()
+        if not self.picking_id:
+            return
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'res_id': self.picking_id.id,
             'view_mode': 'form',
             'views': [(False, 'form')],
         }

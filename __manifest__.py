@@ -5,7 +5,7 @@
     'author': 'Anas Ibrahim',
     'license': 'LGPL-3',
     'depends': [
-        'base','account','hr','stock','mail','contacts','calendar','resource','appointment'
+        'base','account','hr','stock','mail','contacts','calendar','resource','appointment',
     ],
     "data": [
         "security/ir.model.access.csv",

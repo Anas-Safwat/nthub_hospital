@@ -128,6 +128,15 @@
                                 <span class="o_stat_text">Payment</span>
                             </div>
                         </button>
+                        <button name="action_view_picking"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-truck"
+                            invisible="not picking_id">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Delivery</span>
+                            </div>
+                        </button>
                     </div>
 
                     <group>
@@ -168,7 +177,6 @@
                                 readonly="state == 'done'">
                                 <list editable="bottom">
                                     <field name="product_id" />
-                                    <field name="name" />
                                     <field name="price_unit" widget="monetary"
                                         options="{'currency_field': 'currency_id'}" />
                                     <field name="subtotal" widget="monetary"
@@ -184,12 +192,20 @@
                             <field name="medicine_line_ids"
                                 readonly="state != 'in_progress'">
                                 <list editable="bottom">
-                                    <field name="medicine_id" />
+                                    <field name="product_id" />
                                     <field name="dosage" />
                                     <field name="frequency" />
                                     <field name="duration" />
                                     <field name="quantity" />
-                                    <field name="instructions" />
+                                    <field name="price_unit" widget="monetary"
+                                        options="{'currency_field': 'currency_id'}" />
+                                    <field name="subtotal" widget="monetary"
+                                        options="{'currency_field': 'currency_id'}" />
+                                    <field name="instructions" optional="hide" />
+                                    <field name="invoice_line_id" readonly="1"
+                                        optional="hide" />
+                                    <field name="currency_id"
+                                        column_invisible="True" />
                                 </list>
                             </field>
                         </page>

@@ -36,5 +36,4 @@ class HospitalVisitServiceLine(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.name = self.product_id.name
             self.price_unit = self.product_id.lst_price

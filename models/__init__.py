@@ -9,12 +9,12 @@ from . import hospital_manager
 from . import hospital_receptionist
 from . import hospital_patient
 from . import hospital_disease
+from . import account_move
 from . import hospital_visit
 from . import hospital_visit_service_line
 from . import hospital_visit_medicine_line
 from . import hospital_vital_signs
 from . import hospital_diagnosis
-from . import hospital_medicine
 from . import resource_calendar_attendance
 from . import calendar_event
 from . import appointment_type

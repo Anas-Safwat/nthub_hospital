@@ -12,4 +12,3 @@ access_hospital_appointment,hospital.appointment.manager,model_hospital_appointm
 access_hospital_visit_service_line,hospital.visit.service.line.manager,model_hospital_visit_service_line,,1,1,1,1
 access_hospital_visit_medicine_line,hospital.visit.medicine.line.manager,model_hospital_visit_medicine_line,,1,1,1,1
 access_hospital_service,hospital.service.manager,model_hospital_service,,1,1,1,1
-access_hospital_medicine,hospital.medicine.manager,model_hospital_medicine,,1,1,1,1
