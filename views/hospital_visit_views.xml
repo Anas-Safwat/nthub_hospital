@@ -95,7 +95,7 @@
                         class="btn-primary"
                         invisible="state != 'draft'" />
                     <button name="action_start_visit"
-                        string="Start Visit"
+                        string="Check-in"
                         type="object"
                         class="btn-primary"
                         invisible="state != 'paid'" />
