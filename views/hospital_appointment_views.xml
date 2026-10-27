@@ -42,7 +42,7 @@
         <field name="arch" type="xml">
             <list string="Appointments"
                 decoration-info="state == 'draft'"
-                decoration-success="state == 'confirmed'"
+                decoration-success="state in ('confirmed', 'paid')"
                 decoration-muted="state == 'cancelled'">
                 <field name="patient_id" />
                 <field name="doctor_id" />
@@ -55,6 +55,7 @@
                 <field name="state" widget="badge"
                     decoration-info="state == 'draft'"
                     decoration-success="state == 'confirmed'"
+                    decoration-warning="state == 'paid'"
                     decoration-danger="state == 'cancelled'" />
             </list>
         </field>
@@ -75,16 +76,42 @@
                         type="object"
                         class="btn-primary"
                         invisible="state != 'draft'" />
+                    <button name="action_register_payment"
+                        string="Register Payment"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'confirmed' or visit_state != 'draft'" />
                     <button name="action_cancel"
                         string="Cancel"
                         type="object"
                         class="btn-secondary"
-                        invisible="state != 'draft'"
+                        invisible="state not in ('draft', 'confirmed')"
                         confirm="Are you sure you want to cancel this appointment? The slot will become available again." />
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,paid" />
                 </header>
                 <sheet>
-
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="not invoice_id">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Invoice</span>
+                            </div>
+                        </button>
+                        <button name="action_view_payment"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-money"
+                            invisible="not payment_id">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Payment</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="visit_state" invisible="1" />
+                    <field name="payment_id" invisible="1" />
                     <group>
                         <group string="Patient">
                             <field name="patient_id" />

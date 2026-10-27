@@ -1,7 +1,7 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
-
-class HospitalVisitServiceLine(models.Model):
+class HospitalVisitServiceLine(models.Model):   
     _name = 'hospital.visit.service.line'
     _description = 'Visit Service Line'
 
@@ -37,3 +37,11 @@ class HospitalVisitServiceLine(models.Model):
     def _onchange_product_id(self):
         if self.product_id:
             self.price_unit = self.product_id.lst_price
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_invoiced(self):
+        for line in self:
+            if line.invoice_line_id:
+                raise UserError((
+                    "You cannot delete the service '%s' because it is already linked to an invoice."
+                ) % (line.product_id.display_name or line.name))

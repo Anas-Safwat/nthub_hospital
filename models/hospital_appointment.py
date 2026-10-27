@@ -66,6 +66,7 @@ class HospitalAppointment(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
+        ('paid', 'Paid'),
         ('cancelled', 'Cancelled'),
     ], default='draft', tracking=True)
 
@@ -84,6 +85,13 @@ class HospitalAppointment(models.Model):
     invoice_id = fields.Many2one(
         'account.move', string='Invoice',
         copy=False, readonly=True,
+    )
+    
+    visit_state = fields.Selection(
+        related='visit_id.state', string="Visit Status", readonly=True,
+    )
+    payment_id = fields.Many2one(
+        related='visit_id.payment_id', string="Payment", readonly=True,
     )
 
     # ── Compute / Onchange ────────────────────────────────────────
@@ -222,7 +230,7 @@ class HospitalAppointment(models.Model):
                 'product_id': product.id,
                 'name': product.name,
                 'quantity': 1.0,
-                'price_unit': product.lst_price,
+                'price_unit':price,
             })],
         })
 
@@ -256,3 +264,22 @@ class HospitalAppointment(models.Model):
             'visit_id': visit.id,
             'invoice_id': invoice.id,
         })
+    
+    def action_register_payment(self):
+        """Delegate pre-visit payment registration to the linked visit."""
+        self.ensure_one()
+        if not self.visit_id:
+            raise UserError(_("No visit linked to this appointment."))
+        
+        res = self.visit_id.action_register_payment()
+        if self.visit_id.state == 'paid':
+            self.write({'state': 'paid'})
+        return res
+
+    def action_view_invoice(self):
+        self.ensure_one()
+        return self.visit_id.action_view_invoice()
+
+    def action_view_payment(self):
+        self.ensure_one()
+        return self.visit_id.action_view_payment()
