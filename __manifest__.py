@@ -9,8 +9,8 @@
     ],
     "data": [
         "security/ir.model.access.csv",
-        "security/rules.xml",
         "security/security.xml",
+        "security/rules.xml",
         "data/hospital_service_data.xml",
         "views/appointment_type_views.xml",
         "views/hospital_service_views.xml",

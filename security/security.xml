@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- ── Module Category ─────────────────────────────────────── -->
+    <record id="module_category_hospital" model="ir.module.category">
+        <field name="name">Hospital</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <!-- ── Privilege (Odoo 19) ─────────────────────────────────── -->
+    <record id="res_groups_privilege_hospital" model="res.groups.privilege">
+        <field name="name">Hospital</field>
+        <field name="sequence">10</field>
+        <field name="category_id" ref="module_category_hospital" />
+    </record>
+
+    <!-- ── Doctor Group ────────────────────────────────────────── -->
+    <record id="group_hospital_doctor" model="res.groups">
+        <field name="name">Doctor</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_hospital" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        <field name="comment">
+            Doctors can only see their own paid visits.
+        </field>
+    </record>
+
 </odoo>

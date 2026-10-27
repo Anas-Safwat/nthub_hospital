@@ -1,5 +1,5 @@
 from odoo import models, fields, api, Command, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class HospitalAppointment(models.Model):
@@ -124,6 +124,28 @@ class HospitalAppointment(models.Model):
         ):
             self.slot_id = False
 
+    # ── Constraints ───────────────────────────────────────────────
+    @api.constrains('patient_id', 'doctor_id', 'appointment_date')
+    def _check_unique_patient_doctor_per_day(self):
+        for rec in self:
+            if not rec.patient_id or not rec.doctor_id or not rec.appointment_date:
+                continue
+            duplicate = self.search([
+                ('id', '!=', rec.id),
+                ('patient_id', '=', rec.patient_id.id),
+                ('doctor_id', '=', rec.doctor_id.id),
+                ('appointment_date', '=', rec.appointment_date),
+                ('state', '!=', 'cancelled'),
+            ], limit=1)
+            if duplicate:
+                raise ValidationError(_(
+                    "Patient '%(patient)s' already has an appointment with "
+                    "Dr. %(doctor)s on %(date)s.",
+                    patient=rec.patient_id.name,
+                    doctor=rec.doctor_id.name,
+                    date=rec.appointment_date.strftime('%d/%m/%Y'),
+                ))
+
     # ── CRUD overrides ────────────────────────────────────────────
     @api.model_create_multi
     def create(self, vals_list):
@@ -178,8 +200,18 @@ class HospitalAppointment(models.Model):
             service_xmlid='nthub_hospital.hospital_service_consultation',
             service_name='Consultation',
         )
+        if self.slot_type == 'operation':
+            service = self.doctor_id._get_service(
+                service_xmlid='nthub_hospital.hospital_service_operation',
+                service_name='Operation',
+            )
+        else:
+            service = self.doctor_id._get_service(
+                service_xmlid='nthub_hospital.hospital_service_consultation',
+                service_name='Consultation',
+            )
         product = service.product_id
-
+        price = product.lst_price or self.doctor_id.consultation_fee
         # 1. Create draft invoice with the initial service line
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',

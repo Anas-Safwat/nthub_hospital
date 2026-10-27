@@ -58,14 +58,22 @@ class HospitalDoctor(models.Model):
                     login = f"{sanitized}@hospital.local"
 
                 existing_user = self.env['res.users'].sudo().search([('login', '=', login)], limit=1)
+                doctor_group = self.env.ref('nthub_hospital.group_hospital_doctor', raise_if_not_found=False)
                 if existing_user:
+                    if doctor_group:
+                        existing_user.sudo().write({
+                            'groups_id': [(4, doctor_group.id)],
+                        })
                     vals['user_id'] = existing_user.id
                 else:
+                    user_groups = [(4, self.env.ref('base.group_user').id)]
+                    if doctor_group:
+                        user_groups.append((4, doctor_group.id))
                     new_user = self.env['res.users'].sudo().with_context(no_reset_password=True).create({
                         'name': vals.get('name') or _('Doctor'),
                         'login': login,
                         'email': work_email or login,
-                        'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+                        'groups_id': user_groups,
                     })
                     vals['user_id'] = new_user.id
 

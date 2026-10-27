@@ -169,7 +169,6 @@
                                 <list editable="bottom">
                                     <field name="product_id" />
                                     <field name="name" />
-                                    <field name="quantity" />
                                     <field name="price_unit" widget="monetary"
                                         options="{'currency_field': 'currency_id'}" />
                                     <field name="subtotal" widget="monetary"

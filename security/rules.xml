@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- ── Doctor: only own paid visits ────────────────────────── -->
+    <record id="rule_visit_doctor_own_paid" model="ir.rule">
+        <field name="name">Doctor: own paid visits only</field>
+        <field name="model_id" ref="model_hospital_visit" />
+        <field name="groups" eval="[(4, ref('group_hospital_doctor'))]" />
+        <field name="domain_force">[
+            ('doctor_id.user_id', '=', user.id),
+            ('state', 'in', ['paid', 'in_progress', 'done']),
+        ]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
 </odoo>

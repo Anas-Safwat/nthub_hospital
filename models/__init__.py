@@ -14,8 +14,6 @@ from . import hospital_visit_service_line
 from . import hospital_visit_medicine_line
 from . import hospital_vital_signs
 from . import hospital_diagnosis
-from . import hospital_prescription
-from . import hospital_prescription_line
 from . import hospital_medicine
 from . import resource_calendar_attendance
 from . import calendar_event
